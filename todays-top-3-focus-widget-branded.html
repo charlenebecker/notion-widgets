@@ -7,196 +7,210 @@
     <title>Today's Top 3 Focus Widget</title>
     <style>
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: transparent;
-        }
-        .widget-container {
-            width: 100%;
-            max-width: 320px;
-            background: linear-gradient(135deg, #373737, #4A4A4A);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            color: #FFFFFF;
-            position: relative;
-        }
-        .widget-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .widget-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-        .date-display {
-            font-size: 0.85rem;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-        .tasks-container {
-            margin: 16px 0;
-        }
-        .task-item {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            position: relative;
-            transition: all 0.2s ease;
-        }
-        .task-item.completed {
-            background-color: rgba(255, 255, 255, 0.05);
-            opacity: 0.7;
-        }
-        .task-item.completed .task-text {
-            text-decoration: line-through;
-        }
-        .task-checkbox {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 2px solid #ECE3DA;
-            display: inline-block;
-            margin-right: 12px;
-            vertical-align: middle;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .task-item.completed .task-checkbox {
-            background-color: #ECE3DA;
-            position: relative;
-        }
-        .task-item.completed .task-checkbox::after {
-            content: "✓";
-            position: absolute;
-            color: #373737;
-            font-size: 12px;
-            top: -2px;
-            left: 3px;
-        }
-        .task-text {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 0.95rem;
-            width: calc(100% - 40px);
-            word-break: break-word;
-        }
-        .task-priority {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background-color: #ECE3DA;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #373737;
-        }
-        .empty-task {
-            color: rgba(236, 227, 218, 0.7);
-            font-style: italic;
-        }
-        .edit-button {
-            background-color: #ECE3DA;
-            color: #373737;
-            border: none;
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .edit-button:hover {
-            background-color: #FFFFFF;
-        }
-        .edit-mode {
-            display: none;
-        }
-        .edit-mode.active {
-            display: block;
-        }
-        .view-mode.hidden {
-            display: none;
-        }
-        .task-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-            background-color: #FFFFFF;
-            color: #373737;
-        }
-        .save-button {
-            background-color: #ECE3DA;
-            color: #373737;
-            border: none;
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 10px;
-        }
-        .save-button:hover {
-            background-color: #FFFFFF;
-        }
-        .settings-icon {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            opacity: 0.8;
-            transition: all 0.2s ease;
-        }
-        .settings-icon:hover {
-            opacity: 1;
-        }
-        .settings-panel {
-            position: absolute;
-            top: 40px;
-            right: 12px;
-            background-color: #FFFFFF;
-            border-radius: 8px;
-            padding: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            display: none;
-            z-index: 10;
-        }
-        .settings-panel.active {
-            display: block;
-        }
-        .settings-option {
-            color: #373737;
-            padding: 8px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .settings-option:hover {
-            background-color: #ECE3DA;
-        }
-        .footer {
-            font-size: 0.6rem;
-            opacity: 0.7;
-            text-align: center;
-            margin-top: 16px;
-            color: #ECE3DA;
-        }
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: transparent;
+}
+
+.widget-container {
+    width: 100%;
+    max-width: 320px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    color: #373737;
+    position: relative;
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.widget-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.date-display {
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.6;
+}
+
+.tasks-container {
+    margin: 20px 0;
+}
+
+.task-item {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.task-item:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    transform: translateY(-2px);
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #D3D3D3;
+    margin-right: 12px;
+    cursor: pointer;
+    position: relative;
+    background: white;
+    transition: background 0.2s;
+}
+
+.task-checkbox:hover {
+    background: #EBEBEB;
+}
+
+.task-item.completed .task-checkbox {
+    background-color: #D3D3D3;
+}
+
+.task-item.completed .task-checkbox::after {
+    content: "✓";
+    position: absolute;
+    font-size: 12px;
+    color: #373737;
+    top: 2px;
+    left: 4px;
+}
+
+.task-text {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+.task-priority {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #E7E7E7;
+    color: #555;
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.edit-button, .save-button {
+    background: #F5F5F5;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #373737;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.edit-button:hover, .save-button:hover {
+    background: #E7E7E7;
+}
+
+.edit-mode {
+    display: none;
+}
+
+.edit-mode.active {
+    display: block;
+}
+
+.view-mode.hidden {
+    display: none;
+}
+
+.task-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    background: #FFFFFF;
+    font-size: 0.95rem;
+    color: #373737;
+}
+
+.settings-icon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.settings-icon:hover {
+    opacity: 1;
+}
+
+.settings-panel {
+    position: absolute;
+    top: 40px;
+    right: 12px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: none;
+    z-index: 10;
+}
+
+.settings-panel.active {
+    display: block;
+}
+
+.settings-option {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: #555;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.settings-option:hover {
+    background-color: #EBEBEB;
+}
+
+.footer {
+    font-size: 0.6rem;
+    text-align: center;
+    opacity: 0.5;
+    margin-top: 20px;
+}
     </style>
 </head>
 <body>
