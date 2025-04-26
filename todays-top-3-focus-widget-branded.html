@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Charlene Becker">
+    <title>Today's Top 3 Focus Widget</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: transparent;
+        }
+        .widget-container {
+            width: 100%;
+            max-width: 320px;
+            background: linear-gradient(135deg, #373737, #4A4A4A);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: #FFFFFF;
+            position: relative;
+        }
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .widget-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .date-display {
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        .tasks-container {
+            margin: 16px 0;
+        }
+        .task-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .task-item.completed {
+            background-color: rgba(255, 255, 255, 0.05);
+            opacity: 0.7;
+        }
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+        }
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ECE3DA;
+            display: inline-block;
+            margin-right: 12px;
+            vertical-align: middle;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .task-item.completed .task-checkbox {
+            background-color: #ECE3DA;
+            position: relative;
+        }
+        .task-item.completed .task-checkbox::after {
+            content: "✓";
+            position: absolute;
+            color: #373737;
+            font-size: 12px;
+            top: -2px;
+            left: 3px;
+        }
+        .task-text {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 0.95rem;
+            width: calc(100% - 40px);
+            word-break: break-word;
+        }
+        .task-priority {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #ECE3DA;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #373737;
+        }
+        .empty-task {
+            color: rgba(236, 227, 218, 0.7);
+            font-style: italic;
+        }
+        .edit-button {
+            background-color: #ECE3DA;
+            color: #373737;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .edit-button:hover {
+            background-color: #FFFFFF;
+        }
+        .edit-mode {
+            display: none;
+        }
+        .edit-mode.active {
+            display: block;
+        }
+        .view-mode.hidden {
+            display: none;
+        }
+        .task-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            background-color: #FFFFFF;
+            color: #373737;
+        }
+        .save-button {
+            background-color: #ECE3DA;
+            color: #373737;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+        .save-button:hover {
+            background-color: #FFFFFF;
+        }
+        .settings-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.8;
+            transition: all 0.2s ease;
+        }
+        .settings-icon:hover {
+            opacity: 1;
+        }
+        .settings-panel {
+            position: absolute;
+            top: 40px;
+            right: 12px;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 10;
+        }
+        .settings-panel.active {
+            display: block;
+        }
+        .settings-option {
+            color: #373737;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .settings-option:hover {
+            background-color: #ECE3DA;
+        }
+        .footer {
+            font-size: 0.6rem;
+            opacity: 0.7;
+            text-align: center;
+            margin-top: 16px;
+            color: #ECE3DA;
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <div class="settings-icon" id="settingsIcon">⚙️</div>
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-option" id="resetAllOption">Reset all tasks</div>
+            <div class="settings-option" id="exportOption">Export tasks</div>
+        </div>
+        
+        <div class="widget-header">
+            <div class="widget-title">Today's Top 3</div>
+            <div class="date-display" id="dateDisplay"></div>
+        </div>
+        
+        <!-- View Mode -->
+        <div class="view-mode" id="viewMode">
+            <div class="tasks-container" id="tasksContainer">
+                <!-- Tasks will be dynamically generated here -->
+            </div>
+            <button class="edit-button" id="editButton">Edit Tasks</button>
+        </div>
+        
+        <!-- Edit Mode -->
+        <div class="edit-mode" id="editMode">
+            <input type="text" class="task-input" id="task1Input" placeholder="Priority Task #1">
+            <input type="text" class="task-input" id="task2Input" placeholder="Priority Task #2">
+            <input type="text" class="task-input" id="task3Input" placeholder="Priority Task #3">
+            <button class="save-button" id="saveButton">Save Tasks</button>
+        </div>
+        
+        <div class="footer">powered by Charlene Becker</div>
+    </div>
+
+    <script>
+        // Task data structure
+        let tasks = [
+            { text: "", completed: false, priority: 1 },
+            { text: "", completed: false, priority: 2 },
+            { text: "", completed: false, priority: 3 }
+        ];
+        
+        // DOM Elements
+        const dateDisplay = document.getElementById('dateDisplay');
+        const tasksContainer = document.getElementById('tasksContainer');
+        const editButton = document.getElementById('editButton');
+        const saveButton = document.getElementById('saveButton');
+        const viewMode = document.getElementById('viewMode');
+        const editMode = document.getElementById('editMode');
+        const task1Input = document.getElementById('task1Input');
+        const task2Input = document.getElementById('task2Input');
+        const task3Input = document.getElementById('task3Input');
+        const settingsIcon = document.getElementById('settingsIcon');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const resetAllOption = document.getElementById('resetAllOption');
+        const exportOption = document.getElementById('exportOption');
+        
+        // Initialize
+        function init() {
+            // Set current date
+            updateDateDisplay();
+            
+            // Load saved tasks from localStorage
+            loadTasks();
+            
+            // Render tasks
+            renderTasks();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+        
+        // Update date display
+        function updateDateDisplay() {
+            const options = { weekday: 'long', month: 'short', day: 'numeric' };
+            const today = new Date();
+            dateDisplay.textContent = today.toLocaleDateString('en-US', options);
+        }
+        
+        // Load tasks from localStorage
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('top3Tasks');
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+                
+                // Fill input fields
+                task1Input.value = tasks[0].text;
+                task2Input.value = tasks[1].text;
+                task3Input.value = tasks[2].text;
+            }
+        }
+        
+        // Save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('top3Tasks', JSON.stringify(tasks));
+        }
+        
+        // Render tasks in view mode
+        function renderTasks() {
+            tasksContainer.innerHTML = '';
+            
+            tasks.forEach((task, index) => {
+                const taskElement = document.createElement('div');
+                taskElement.className = `task-item ${task.completed ? 'completed' : ''}`;
+                
+                // Create task priority badge
+                const priorityElement = document.createElement('div');
+                priorityElement.className = 'task-priority';
+                priorityElement.textContent = task.priority;
+                taskElement.appendChild(priorityElement);
+                
+                // Create checkbox
+                const checkboxElement = document.createElement('span');
+                checkboxElement.className = 'task-checkbox';
+                checkboxElement.dataset.index = index;
+                taskElement.appendChild(checkboxElement);
+                
+                // Create task text
+                const textElement = document.createElement('span');
+                textElement.className = 'task-text';
+                
+                if (task.text.trim() === '') {
+                    textElement.className += ' empty-task';
+                    textElement.textContent = `Add priority task #${task.priority}`;
+                } else {
+                    textElement.textContent = task.text;
+                }
+                
+                taskElement.appendChild(textElement);
+                tasksContainer.appendChild(taskElement);
+            });
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Edit button
+            editButton.addEventListener('click', () => {
+                viewMode.classList.add('hidden');
+                editMode.classList.add('active');
+            });
+            
+            // Save button
+            saveButton.addEventListener('click', () => {
+                // Update tasks with input values
+                tasks[0].text = task1Input.value;
+                tasks[1].text = task2Input.value;
+                tasks[2].text = task3Input.value;
+                
+                // Save and render
+                saveTasks();
+                renderTasks();
+                
+                // Switch back to view mode
+                viewMode.classList.remove('hidden');
+                editMode.classList.remove('active');
+            });
+            
+            // Task checkbox toggle
+            tasksContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('task-checkbox')) {
+                    const index = parseInt(e.target.dataset.index);
+                    tasks[index].completed = !tasks[index].completed;
+                    saveTasks();
+                    renderTasks();
+                }
+            });
+            
+            // Settings icon
+            settingsIcon.addEventListener('click', () => {
+                settingsPanel.classList.toggle('active');
+            });
+            
+            // Reset all option
+            resetAllOption.addEventListener('click', () => {
+                tasks = [
+                    { text: "", completed: false, priority: 1 },
+                    { text: "", completed: false, priority: 2 },
+                    { text: "", completed: false, priority: 3 }
+                ];
+                
+                task1Input.value = '';
+                task2Input.value = '';
+                task3Input.value = '';
+                
+                saveTasks();
+                renderTasks();
+                settingsPanel.classList.remove('active');
+            });
+            
+            // Export option
+            exportOption.addEventListener('click', () => {
+                const taskText = tasks
+                    .filter(task => task.text.trim() !== '')
+                    .map(task => `${task.priority}. ${task.text} ${task.completed ? '(✓)' : ''}`)
+                    .join('\n');
+                
+                const exportText = `Today's Top 3 Tasks (${dateDisplay.textContent}):\n${taskText}`;
+                
+                // Create a temporary textarea to copy text to clipboard
+                const textarea = document.createElement('textarea');
+                textarea.value = exportText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                alert('Tasks copied to clipboard!');
+                settingsPanel.classList.remove('active');
+            });
+            
+            // Close settings panel when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!settingsIcon.contains(e.target) && !settingsPanel.contains(e.target)) {
+                    settingsPanel.classList.remove('active');
+                }
+            });
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
