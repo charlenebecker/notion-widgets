@@ -19,11 +19,11 @@
 
 .widget-container {
     width: 100%;
-    max-width: 320px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    max-width: 240px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     color: #373737;
     position: relative;
 }
@@ -32,50 +32,50 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .widget-title {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     font-weight: 700;
 }
 
 .date-display {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     font-weight: 500;
     opacity: 0.6;
 }
 
 .tasks-container {
-    margin: 20px 0;
+    margin: 12px 0;
 }
 
 .task-item {
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    transition: all 0.2s ease;
+    padding: 6px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
     display: flex;
     align-items: center;
     position: relative;
 }
 
 .task-item:hover {
-    background-color: rgba(0, 0, 0, 0.03);
-    transform: translateY(-2px);
+    background-color: rgba(0, 0, 0, 0.02);
+    transform: translateY(-1px);
 }
 
 .task-item.completed .task-text {
     text-decoration: line-through;
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
 .task-checkbox {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
     border: 2px solid #D3D3D3;
-    margin-right: 12px;
+    margin-right: 8px;
     cursor: pointer;
     position: relative;
     background: white;
@@ -93,27 +93,27 @@
 .task-item.completed .task-checkbox::after {
     content: "✓";
     position: absolute;
-    font-size: 12px;
+    font-size: 9px;
     color: #373737;
-    top: 2px;
-    left: 4px;
+    top: 0;
+    left: 3px;
 }
 
 .task-text {
     flex-grow: 1;
-    font-size: 0.95rem;
-    letter-spacing: 0.3px;
+    font-size: 0.75rem;
+    letter-spacing: 0.1px;
 }
 
 .task-priority {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: -5px;
+    right: -5px;
     background: #E7E7E7;
     color: #555;
-    width: 22px;
-    height: 22px;
-    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
+    font-size: 0.6rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -124,15 +124,15 @@
 .edit-button, .save-button {
     background: #F5F5F5;
     border: none;
-    padding: 10px 14px;
-    border-radius: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     color: #373737;
     cursor: pointer;
     transition: background 0.2s;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 6px;
 }
 
 .edit-button:hover, .save-button:hover {
@@ -153,22 +153,22 @@
 
 .task-input {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 8px;
+    margin-bottom: 8px;
     border: 1px solid #E0E0E0;
-    border-radius: 8px;
+    border-radius: 6px;
     background: #FFFFFF;
-    font-size: 0.95rem;
+    font-size: 0.75rem;
     color: #373737;
 }
 
 .settings-icon {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 1.1rem;
+    top: 8px;
+    right: 8px;
+    font-size: 0.9rem;
     cursor: pointer;
-    opacity: 0.6;
+    opacity: 0.5;
     transition: opacity 0.2s;
 }
 
@@ -178,12 +178,12 @@
 
 .settings-panel {
     position: absolute;
-    top: 40px;
-    right: 12px;
+    top: 30px;
+    right: 8px;
     background: #FFFFFF;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    padding: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     display: none;
     z-index: 10;
 }
@@ -193,11 +193,11 @@
 }
 
 .settings-option {
-    font-size: 0.85rem;
-    padding: 8px 12px;
+    font-size: 0.7rem;
+    padding: 5px 8px;
     cursor: pointer;
     color: #555;
-    border-radius: 6px;
+    border-radius: 5px;
     transition: background 0.2s;
 }
 
@@ -206,10 +206,10 @@
 }
 
 .footer {
-    font-size: 0.6rem;
+    font-size: 0.45rem;
     text-align: center;
-    opacity: 0.5;
-    margin-top: 20px;
+    opacity: 0.4;
+    margin-top: 12px;
 }
     </style>
 </head>
