@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Charlene Becker">
+    <title>Daily Destination Knowledge Quiz</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: transparent;
+        }
+        .widget-container {
+            width: 100%;
+            max-width: 350px;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        .widget-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .question-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .question {
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .option {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+        .option:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .option.selected {
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .option.correct {
+            background-color: rgba(76, 175, 80, 0.6);
+            border-color: white;
+        }
+        .option.incorrect {
+            background-color: rgba(244, 67, 54, 0.6);
+            border-color: white;
+        }
+        .feedback {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 12px 0;
+            min-height: 40px;
+        }
+        .check-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background-color: white;
+            color: #4CAF50;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0 auto;
+            display: block;
+        }
+        .check-button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .check-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .date-display {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .footer {
+            font-size: 0.6rem;
+            opacity: 0.7;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <div class="date-display" id="current-date">Today's Date</div>
+        <div class="widget-title">Daily Destination Quiz</div>
+        <div class="question-container">
+            <div class="question" id="question">Loading today's destination challenge...</div>
+        </div>
+        <div class="options-container" id="options">
+            <!-- Options will be dynamically populated -->
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button id="checkBtn" class="check-button" disabled>Check Answer</button>
+        <div class="footer">powered by Charlene Becker</div>
+    </div>
+
+    <script>
+        // Quiz database with questions, options, and answers
+        const quizData = [
+            {
+                question: "What is the capital of Namibia?",
+                options: ["Windhoek", "Luanda", "Gaborone", "Maputo"],
+                correct: 0,
+                fact: "Windhoek is Namibia's capital and largest city, known for its German colonial architecture."
+            },
+            {
+                question: "Which Greek island is known as 'the Island of the Winds'?",
+                options: ["Santorini", "Mykonos", "Crete", "Rhodes"],
+                correct: 1,
+                fact: "Mykonos is famous for its windmills and strong northerly winds called the 'meltemi'."
+            },
+            {
+                question: "What is the largest city in New Zealand?",
+                options: ["Wellington", "Christchurch", "Auckland", "Queenstown"],
+                correct: 2,
+                fact: "Auckland is home to approximately one-third of New Zealand's population."
+            },
+            {
+                question: "Which country is home to Angkor Wat?",
+                options: ["Thailand", "Vietnam", "Cambodia", "Laos"],
+                correct: 2,
+                fact: "Angkor Wat in Cambodia is the largest religious monument in the world."
+            },
+            {
+                question: "What is the official currency of Japan?",
+                options: ["Yuan", "Won", "Yen", "Ringgit"],
+                correct: 2,
+                fact: "The Japanese Yen is one of the world's major currencies and is the third most traded currency."
+            },
+            {
+                question: "Which Italian city is famous for its canals?",
+                options: ["Rome", "Florence", "Milan", "Venice"],
+                correct: 3,
+                fact: "Venice has over 150 canals and approximately 400 bridges connecting its 118 small islands."
+            },
+            {
+                question: "What is the tallest mountain in Africa?",
+                options: ["Mount Kilimanjaro", "Mount Kenya", "Atlas Mountains", "Mount Meru"],
+                correct: 0,
+                fact: "Mount Kilimanjaro stands at 19,341 feet (5,895 meters) and is a dormant volcano."
+            },
+            {
+                question: "Which country is known as the 'Land of Fire and Ice'?",
+                options: ["Norway", "Iceland", "Finland", "Greenland"],
+                correct: 1,
+                fact: "Iceland earned this nickname due to its glaciers and volcanoes existing side by side."
+            },
+            {
+                question: "What is the largest coral reef system in the world?",
+                options: ["Belize Barrier Reef", "Great Barrier Reef", "Mesoamerican Reef", "New Caledonia Reef"],
+                correct: 1,
+                fact: "Australia's Great Barrier Reef stretches for over 1,400 miles and can be seen from space."
+            },
+            {
+                question: "Which European city is known as the 'City of Light'?",
+                options: ["Paris", "Vienna", "Amsterdam", "Budapest"],
+                correct: 0,
+                fact: "Paris got this nickname in the 18th century during the Age of Enlightenment and for being one of the first cities to install street lighting."
+            },
+            {
+                question: "What is the main language spoken in Brazil?",
+                options: ["Spanish", "Portuguese", "French", "English"],
+                correct: 1,
+                fact: "Brazil is the only Portuguese-speaking country in South America."
+            },
+            {
+                question: "Which desert is the largest in the world?",
+                options: ["Gobi Desert", "Kalahari Desert", "Sahara Desert", "Antarctic Desert"],
+                correct: 3,
+                fact: "The Antarctic Desert is technically the largest desert in the world, covering 5.5 million square miles."
+            },
+            {
+                question: "What is the traditional Japanese art of paper folding called?",
+                options: ["Ikebana", "Origami", "Bonsai", "Kintsugi"],
+                correct: 1,
+                fact: "Origami comes from the Japanese words 'ori' meaning folding, and 'kami' meaning paper."
+            },
+            {
+                question: "Which country has the most islands in the world?",
+                options: ["Indonesia", "Philippines", "Sweden", "Canada"],
+                correct: 2,
+                fact: "Sweden has approximately 267,570 islands, though only about 1,000 are inhabited."
+            },
+            {
+                question: "What is the smallest country in the world by land area?",
+                options: ["Monaco", "Nauru", "Vatican City", "San Marino"],
+                correct: 2,
+                fact: "Vatican City is just 121 acres (0.19 square miles) in size."
+            }
+        ];
+
+        // Game state
+        let currentQuestion = null;
+        let selectedOption = null;
+        let answered = false;
+        let lastQuestionDate = null;
+        let currentQuestionIndex = 0;
+
+        // DOM Elements
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        const checkButton = document.getElementById('checkBtn');
+        const dateDisplay = document.getElementById('current-date');
+
+        // Initialize
+        function init() {
+            // Display current date
+            updateDateDisplay();
+            
+            // Load question for today
+            loadDailyQuestion();
+
+            // Event listeners
+            checkButton.addEventListener('click', checkAnswer);
+        }
+
+        // Format date as string (MM/DD/YYYY)
+        function formatDate(date) {
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const year = date.getFullYear();
+            return `${month}/${day}/${year}`;
+        }
+
+        // Update the date display
+        function updateDateDisplay() {
+            const today = new Date();
+            dateDisplay.textContent = formatDate(today);
+        }
+
+        // Check if a new question should be loaded (based on date)
+        function shouldLoadNewQuestion() {
+            const today = new Date();
+            const todayString = formatDate(today);
+            
+            // Get last question date from localStorage
+            const savedDate = localStorage.getItem('lastQuestionDate');
+            
+            // If dates don't match, load a new question
+            return savedDate !== todayString;
+        }
+
+        // Load the question for today
+        function loadDailyQuestion() {
+            const today = new Date();
+            const todayString = formatDate(today);
+            
+            // Reset state
+            selectedOption = null;
+            answered = false;
+            feedbackElement.textContent = '';
+            checkButton.disabled = true;
+            
+            // Check if we need a new question today
+            if (shouldLoadNewQuestion()) {
+                // Get the saved question index or start from beginning
+                let savedIndex = localStorage.getItem('currentQuestionIndex');
+                if (savedIndex !== null) {
+                    currentQuestionIndex = parseInt(savedIndex);
+                    // Move to next question
+                    currentQuestionIndex++;
+                    // Reset to beginning if we've gone through all questions
+                    if (currentQuestionIndex >= quizData.length) {
+                        currentQuestionIndex = 0;
+                    }
+                }
+                
+                // Save the new index and date
+                localStorage.setItem('currentQuestionIndex', currentQuestionIndex);
+                localStorage.setItem('lastQuestionDate', todayString);
+                
+                // Set the current question
+                currentQuestion = quizData[currentQuestionIndex];
+                
+                // Check if there was an answer saved for today's question already
+                const answerStatus = localStorage.getItem('answerStatus-' + todayString);
+                if (answerStatus) {
+                    answered = true;
+                    selectedOption = parseInt(localStorage.getItem('selectedOption-' + todayString));
+                }
+            } else {
+                // Use the same question as before
+                const savedIndex = localStorage.getItem('currentQuestionIndex');
+                if (savedIndex !== null) {
+                    currentQuestionIndex = parseInt(savedIndex);
+                }
+                currentQuestion = quizData[currentQuestionIndex];
+                
+                // Check if there was an answer saved for today's question already
+                const answerStatus = localStorage.getItem('answerStatus-' + todayString);
+                if (answerStatus) {
+                    answered = true;
+                    selectedOption = parseInt(localStorage.getItem('selectedOption-' + todayString));
+                }
+            }
+            
+            // Update UI
+            questionElement.textContent = currentQuestion.question;
+            
+            // Clear and populate options
+            optionsContainer.innerHTML = '';
+            currentQuestion.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                
+                // If previously answered
+                if (answered && selectedOption === index) {
+                    optionElement.classList.add('selected');
+                }
+                if (answered && index === currentQuestion.correct) {
+                    optionElement.classList.add('correct');
+                }
+                if (answered && selectedOption === index && selectedOption !== currentQuestion.correct) {
+                    optionElement.classList.add('incorrect');
+                }
+                
+                optionElement.addEventListener('click', () => {
+                    if (!answered) {
+                        // Remove selected class from all options
+                        document.querySelectorAll('.option').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to clicked option
+                        optionElement.classList.add('selected');
+                        selectedOption = index;
+                        
+                        // Enable check button
+                        checkButton.disabled = false;
+                    }
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Show feedback if already answered
+            if (answered) {
+                checkButton.disabled = true;
+                if (selectedOption === currentQuestion.correct) {
+                    feedbackElement.textContent = `Correct! ${currentQuestion.fact}`;
+                } else {
+                    feedbackElement.textContent = `Not quite! The correct answer is ${currentQuestion.options[currentQuestion.correct]}. ${currentQuestion.fact}`;
+                }
+            }
+        }
+
+        // Check the selected answer
+        function checkAnswer() {
+            if (selectedOption === null) return;
+            
+            answered = true;
+            const today = new Date();
+            const todayString = formatDate(today);
+            
+            // Save the answer status for today
+            localStorage.setItem('answerStatus-' + todayString, 'true');
+            localStorage.setItem('selectedOption-' + todayString, selectedOption);
+            
+            const options = document.querySelectorAll('.option');
+            const correctIndex = currentQuestion.correct;
+            
+            // Mark correct and incorrect options
+            options[correctIndex].classList.add('correct');
+            
+            if (selectedOption === correctIndex) {
+                // Correct answer
+                feedbackElement.textContent = `Correct! ${currentQuestion.fact}`;
+            } else {
+                // Incorrect answer
+                options[selectedOption].classList.add('incorrect');
+                feedbackElement.textContent = `Not quite! The correct answer is ${currentQuestion.options[correctIndex]}. ${currentQuestion.fact}`;
+            }
+            
+            // Disable check button
+            checkButton.disabled = true;
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
