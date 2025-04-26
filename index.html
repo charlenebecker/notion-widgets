@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Charlene Becker">
+<title>Destination Knowledge Quiz</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #ffffff;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .quiz-container {
+    border: 1px solid #ccc;
+    padding: 20px 30px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  }
+  .question {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  button {
+    background-color: #222;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  button:hover {
+    background-color: #444;
+  }
+  small {
+    display: block;
+    margin-top: 20px;
+    font-size: 10px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div class="question" id="quizQuestion">Loading question...</div>
+  <button onclick="newQuestion()">New Question</button>
+  <small>Created by Charlene Becker</small>
+</div>
+
+<script>
+  const questions = [
+    "What is the capital of Namibia?",
+    "Which country is home to the city of Kyoto?",
+    "What river runs through Paris?",
+    "In which country would you visit the Amalfi Coast?",
+    "Which city is known as the 'Pearl of the Danube'?",
+    "Mount Kilimanjaro is located in which country?",
+    "Which Caribbean island is known for its Piton Mountains?",
+    "Which South American country has Machu Picchu?",
+    "Where is Table Mountain located?",
+    "What is the capital city of Canada?"
+  ];
+  
+  function newQuestion() {
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    document.getElementById('quizQuestion').textContent = questions[randomIndex];
+  }
+  
+  window.onload = newQuestion;
+</script>
+
+</body>
+</html>
