@@ -18,34 +18,39 @@
         }
         .widget-container {
             width: 100%;
-            max-width: 350px;
-            background: linear-gradient(135deg, #4CAF50, #8BC34A);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            color: white;
+            max-width: 290px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            color: #333;
             text-align: center;
             position: relative;
         }
         .widget-title {
-            font-size: 1.2rem;
+            position: absolute;
+            top: 6px;
+            left: 16px;
+            font-size: 1.1rem;
             font-weight: 700;
             margin-bottom: 12px;
+            color: #111;
         }
         .question-container {
-            background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 14px;
             margin: 12px 0;
-            min-height: 80px;
+            min-height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .question {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            line-height: 1.5;
+            line-height: 1.4;
+            color: #333;
         }
         .options-container {
             display: flex;
@@ -54,49 +59,54 @@
             margin: 16px 0;
         }
         .option {
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid transparent;
-            border-radius: 6px;
-            padding: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.2s, border-color 0.2s;
             text-align: left;
         }
         .option:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: #f0f0f0;
         }
         .option.selected {
-            border-color: white;
-            background-color: rgba(255, 255, 255, 0.3);
+            border-color: #4F46E5;
+            background-color: #eef2ff;
         }
         .option.correct {
             background-color: rgba(76, 175, 80, 0.6);
             border-color: white;
         }
         .option.incorrect {
-            background-color: rgba(244, 67, 54, 0.6);
-            border-color: white;
+            border-color: #EF4444;
+            background-color: #fee2e2;
         }
         .feedback {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            margin: 12px 0;
-            min-height: 40px;
+            margin-top: 8px;
+            min-height: 32px;
+            color: #555;
         }
         .check-button {
-            padding: 8px 16px;
+            padding: 6px 12px;
             border: none;
-            border-radius: 6px;
-            background-color: white;
-            color: #4CAF50;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+            color: #333;
             font-weight: 600;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s ease;
-            margin: 0 auto;
-            display: block;
+            transition: background 0.2s;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
         }
         .check-button:hover {
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: #f5f5f5;
         }
         .check-button:disabled {
             opacity: 0.7;
@@ -104,7 +114,7 @@
         }
         .date-display {
             position: absolute;
-            top: 16px;
+            top: 6px;
             right: 16px;
             background-color: rgba(255, 255, 255, 0.2);
             border-radius: 20px;
@@ -114,7 +124,7 @@
         }
         .footer {
             font-size: 0.6rem;
-            opacity: 0.7;
+            opacity: 0.6;
             margin-top: 16px;
         }
     </style>
@@ -138,95 +148,611 @@
         // Quiz database with questions, options, and answers
         const quizData = [
             {
-                question: "What is the capital of Namibia?",
-                options: ["Windhoek", "Luanda", "Gaborone", "Maputo"],
-                correct: 0,
-                fact: "Windhoek is Namibia's capital and largest city, known for its German colonial architecture."
-            },
-            {
-                question: "Which Greek island is known as 'the Island of the Winds'?",
-                options: ["Santorini", "Mykonos", "Crete", "Rhodes"],
-                correct: 1,
-                fact: "Mykonos is famous for its windmills and strong northerly winds called the 'meltemi'."
-            },
-            {
-                question: "What is the largest city in New Zealand?",
-                options: ["Wellington", "Christchurch", "Auckland", "Queenstown"],
-                correct: 2,
-                fact: "Auckland is home to approximately one-third of New Zealand's population."
-            },
-            {
-                question: "Which country is home to Angkor Wat?",
-                options: ["Thailand", "Vietnam", "Cambodia", "Laos"],
-                correct: 2,
-                fact: "Angkor Wat in Cambodia is the largest religious monument in the world."
-            },
-            {
-                question: "What is the official currency of Japan?",
-                options: ["Yuan", "Won", "Yen", "Ringgit"],
-                correct: 2,
-                fact: "The Japanese Yen is one of the world's major currencies and is the third most traded currency."
-            },
-            {
-                question: "Which Italian city is famous for its canals?",
-                options: ["Rome", "Florence", "Milan", "Venice"],
-                correct: 3,
-                fact: "Venice has over 150 canals and approximately 400 bridges connecting its 118 small islands."
-            },
-            {
-                question: "What is the tallest mountain in Africa?",
-                options: ["Mount Kilimanjaro", "Mount Kenya", "Atlas Mountains", "Mount Meru"],
-                correct: 0,
-                fact: "Mount Kilimanjaro stands at 19,341 feet (5,895 meters) and is a dormant volcano."
-            },
-            {
-                question: "Which country is known as the 'Land of Fire and Ice'?",
-                options: ["Norway", "Iceland", "Finland", "Greenland"],
-                correct: 1,
-                fact: "Iceland earned this nickname due to its glaciers and volcanoes existing side by side."
-            },
-            {
-                question: "What is the largest coral reef system in the world?",
-                options: ["Belize Barrier Reef", "Great Barrier Reef", "Mesoamerican Reef", "New Caledonia Reef"],
-                correct: 1,
-                fact: "Australia's Great Barrier Reef stretches for over 1,400 miles and can be seen from space."
-            },
-            {
-                question: "Which European city is known as the 'City of Light'?",
-                options: ["Paris", "Vienna", "Amsterdam", "Budapest"],
-                correct: 0,
-                fact: "Paris got this nickname in the 18th century during the Age of Enlightenment and for being one of the first cities to install street lighting."
-            },
-            {
-                question: "What is the main language spoken in Brazil?",
-                options: ["Spanish", "Portuguese", "French", "English"],
-                correct: 1,
-                fact: "Brazil is the only Portuguese-speaking country in South America."
-            },
-            {
-                question: "Which desert is the largest in the world?",
-                options: ["Gobi Desert", "Kalahari Desert", "Sahara Desert", "Antarctic Desert"],
-                correct: 3,
-                fact: "The Antarctic Desert is technically the largest desert in the world, covering 5.5 million square miles."
-            },
-            {
-                question: "What is the traditional Japanese art of paper folding called?",
-                options: ["Ikebana", "Origami", "Bonsai", "Kintsugi"],
-                correct: 1,
-                fact: "Origami comes from the Japanese words 'ori' meaning folding, and 'kami' meaning paper."
-            },
-            {
-                question: "Which country has the most islands in the world?",
-                options: ["Indonesia", "Philippines", "Sweden", "Canada"],
-                correct: 2,
-                fact: "Sweden has approximately 267,570 islands, though only about 1,000 are inhabited."
-            },
-            {
-                question: "What is the smallest country in the world by land area?",
-                options: ["Monaco", "Nauru", "Vatican City", "San Marino"],
-                correct: 2,
-                fact: "Vatican City is just 121 acres (0.19 square miles) in size."
-            }
+    question: "Which country is famous for inventing pizza?",
+    options: ["France", "Italy", "Spain", "Greece"],
+    correct: 1,
+    fact: "Pizza originated in Naples, Italy in the 18th century."
+},
+{
+    question: "Which ocean is the largest?",
+    options: ["Atlantic", "Indian", "Arctic", "Pacific"],
+    correct: 3,
+    fact: "The Pacific Ocean covers more than 63 million square miles."
+},
+{
+    question: "In which city would you find the Colosseum?",
+    options: ["Athens", "Rome", "Istanbul", "Barcelona"],
+    correct: 1,
+    fact: "The Colosseum is an ancient Roman amphitheater in Rome, Italy."
+},
+{
+    question: "Which U.S. state is known as the 'Sunshine State'?",
+    options: ["California", "Florida", "Arizona", "Texas"],
+    correct: 1,
+    fact: "Florida is called the 'Sunshine State' because of its generally warm and sunny climate."
+},
+{
+    question: "What is the currency of Mexico?",
+    options: ["Peso", "Real", "Dollar", "Lira"],
+    correct: 0,
+    fact: "The Mexican Peso is the official currency of Mexico."
+},
+{
+    question: "Which African country is famous for safaris and the Great Migration?",
+    options: ["South Africa", "Kenya", "Morocco", "Egypt"],
+    correct: 1,
+    fact: "Kenya's Maasai Mara Reserve hosts the annual wildebeest migration."
+},
+{
+    question: "What is the name of the longest river in the world?",
+    options: ["Amazon", "Yangtze", "Nile", "Mississippi"],
+    correct: 2,
+    fact: "The Nile River stretches over 4,100 miles across Africa."
+},
+{
+    question: "In which country would you find Machu Picchu?",
+    options: ["Peru", "Brazil", "Argentina", "Chile"],
+    correct: 0,
+    fact: "Machu Picchu is a 15th-century Inca citadel located in Peru."
+},
+{
+    question: "What city is known as the Big Apple?",
+    options: ["Los Angeles", "Chicago", "New York City", "Boston"],
+    correct: 2,
+    fact: "New York City earned the nickname 'The Big Apple' in the 1920s."
+},
+{
+    question: "Which Asian country is known as the Land of the Rising Sun?",
+    options: ["China", "South Korea", "Thailand", "Japan"],
+    correct: 3,
+    fact: "Japan's name means 'origin of the sun,' referring to its eastern location."
+},
+{
+    question: "What mountain range separates Europe and Asia?",
+    options: ["Alps", "Himalayas", "Ural Mountains", "Andes"],
+    correct: 2,
+    fact: "The Ural Mountains form part of the traditional boundary between Europe and Asia."
+},
+{
+    question: "What is the capital of Canada?",
+    options: ["Toronto", "Vancouver", "Ottawa", "Montreal"],
+    correct: 2,
+    fact: "Ottawa is Canada's capital, located in the province of Ontario."
+},
+{
+    question: "Which island country lies south of India?",
+    options: ["Maldives", "Sri Lanka", "Madagascar", "Indonesia"],
+    correct: 1,
+    fact: "Sri Lanka is often called the 'Pearl of the Indian Ocean'."
+},
+{
+    question: "Which famous tower in Paris was built in 1889?",
+    options: ["Notre-Dame", "Arc de Triomphe", "Eiffel Tower", "Louvre"],
+    correct: 2,
+    fact: "The Eiffel Tower was originally built for the 1889 World's Fair."
+},
+{
+    question: "What is the national animal of Australia?",
+    options: ["Kangaroo", "Koala", "Emu", "Dingo"],
+    correct: 0,
+    fact: "The kangaroo appears on Australia's coat of arms."
+},
+{
+    question: "What is the world's largest rainforest?",
+    options: ["Congo Rainforest", "Amazon Rainforest", "Daintree Rainforest", "Valdivian Rainforest"],
+    correct: 1,
+    fact: "The Amazon Rainforest covers approximately 2.1 million square miles."
+},
+{
+    question: "Which country is famous for tulips and windmills?",
+    options: ["Belgium", "Germany", "Netherlands", "Denmark"],
+    correct: 2,
+    fact: "The Netherlands is known for its colorful tulip fields and historic windmills."
+},
+{
+    question: "Which famous statue stands on Liberty Island?",
+    options: ["Christ the Redeemer", "Statue of Liberty", "Moai", "The Thinker"],
+    correct: 1,
+    fact: "The Statue of Liberty was a gift from France to the United States in 1886."
+},
+{
+    question: "What desert covers most of northern Africa?",
+    options: ["Gobi", "Atacama", "Kalahari", "Sahara"],
+    correct: 3,
+    fact: "The Sahara Desert is the largest hot desert in the world."
+},
+{
+    question: "Which European city is known for its canals and gondolas?",
+    options: ["Amsterdam", "Venice", "Bruges", "Copenhagen"],
+    correct: 1,
+    fact: "Venice, Italy, is built on more than 100 small islands and connected by canals."
+},
+{
+    question: "Which country is home to the Great Barrier Reef?",
+    options: ["Australia", "New Zealand", "Fiji", "Indonesia"],
+    correct: 0,
+    fact: "The Great Barrier Reef is the world's largest coral reef system, located off the coast of Queensland, Australia."
+},
+{
+    question: "In which U.S. city is Hollywood located?",
+    options: ["Las Vegas", "Los Angeles", "San Francisco", "San Diego"],
+    correct: 1,
+    fact: "Hollywood is a district in Los Angeles famous for its entertainment industry."
+},
+{
+    question: "What is the capital of Spain?",
+    options: ["Barcelona", "Seville", "Madrid", "Valencia"],
+    correct: 2,
+    fact: "Madrid is the capital and largest city of Spain."
+},
+{
+    question: "What is the world's longest wall?",
+    options: ["Berlin Wall", "Hadrian's Wall", "Great Wall of China", "Western Wall"],
+    correct: 2,
+    fact: "The Great Wall of China stretches over 13,000 miles."
+},
+{
+    question: "Which country is famous for its ancient pyramids?",
+    options: ["Mexico", "Egypt", "Peru", "India"],
+    correct: 1,
+    fact: "Egypt's pyramids, especially the Great Pyramid of Giza, are among the most iconic monuments in the world."
+},
+{
+    question: "In which city is the famous Times Square located?",
+    options: ["Los Angeles", "New York City", "Chicago", "Miami"],
+    correct: 1,
+    fact: "Times Square is a major commercial intersection in Midtown Manhattan, New York City."
+},
+{
+    question: "Which river flows through London?",
+    options: ["Seine", "Danube", "Thames", "Rhine"],
+    correct: 2,
+    fact: "The River Thames is the longest river entirely in England."
+},
+{
+    question: "What is the capital city of Japan?",
+    options: ["Tokyo", "Kyoto", "Osaka", "Hiroshima"],
+    correct: 0,
+    fact: "Tokyo is the capital and the most populous metropolitan area in the world."
+},
+{
+    question: "Which country is the largest by land area?",
+    options: ["China", "United States", "Russia", "Canada"],
+    correct: 2,
+    fact: "Russia is the largest country, covering more than 11% of Earth's landmass."
+},
+{
+    question: "Which Italian city is known for its Leaning Tower?",
+    options: ["Rome", "Pisa", "Venice", "Florence"],
+    correct: 1,
+    fact: "The Leaning Tower of Pisa began tilting during its construction in the 12th century."
+},
+{
+    question: "Which U.S. state is known as the 'Sunshine State'?",
+    options: ["California", "Florida", "Arizona", "Texas"],
+    correct: 1,
+    fact: "Florida earned the nickname 'Sunshine State' due to its generally warm and sunny climate."
+},
+{
+    question: "Which ocean is the largest?",
+    options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+    correct: 3,
+    fact: "The Pacific Ocean covers more area than all the landmasses combined."
+},
+{
+    question: "Which country gifted the Statue of Liberty to the U.S.?",
+    options: ["United Kingdom", "Germany", "France", "Italy"],
+    correct: 2,
+    fact: "France gifted the Statue of Liberty to celebrate the centennial of the American Declaration of Independence."
+},
+{
+    question: "Which African country is famous for safaris and the Maasai people?",
+    options: ["South Africa", "Kenya", "Nigeria", "Egypt"],
+    correct: 1,
+    fact: "Kenya is renowned for its wildlife safaris and Maasai culture."
+},
+{
+    question: "Which European country is shaped like a boot?",
+    options: ["Portugal", "Italy", "Spain", "Greece"],
+    correct: 1,
+    fact: "Italy's peninsula is famously boot-shaped, extending into the Mediterranean Sea."
+},
+{
+    question: "Which mountain range separates Europe and Asia?",
+    options: ["Alps", "Andes", "Himalayas", "Ural Mountains"],
+    correct: 3,
+    fact: "The Ural Mountains are commonly considered the natural boundary between Europe and Asia."
+},
+{
+    question: "What is the largest lake in Africa?",
+    options: ["Lake Tanganyika", "Lake Victoria", "Lake Malawi", "Lake Chad"],
+    correct: 1,
+    fact: "Lake Victoria is Africa’s largest lake by area and the world's second-largest freshwater lake."
+},
+{
+    question: "Which city is famous for its 'Big Ben' clock tower?",
+    options: ["Paris", "London", "Berlin", "Rome"],
+    correct: 1,
+    fact: "Big Ben refers to the Great Bell of the clock at the Palace of Westminster in London."
+},
+{
+    question: "What is the world's tallest building (as of 2025)?",
+    options: ["Shanghai Tower", "Burj Khalifa", "One World Trade Center", "Petronas Towers"],
+    correct: 1,
+    fact: "The Burj Khalifa in Dubai stands at a height of 828 meters (2,717 feet)."
+},
+{
+    question: "Which country is known for inventing pizza?",
+    options: ["Greece", "Italy", "Turkey", "France"],
+    correct: 1,
+    fact: "Pizza originated from Naples, Italy, in the late 18th century."
+},
+{
+    question: "Which island country is located in the Indian Ocean and famous for its lemurs?",
+    options: ["Maldives", "Mauritius", "Madagascar", "Seychelles"],
+    correct: 2,
+    fact: "Madagascar is home to around 100 different species of lemurs."
+},
+{
+    question: "In which city would you find the Colosseum?",
+    options: ["Athens", "Rome", "Istanbul", "Barcelona"],
+    correct: 1,
+    fact: "The Colosseum is an ancient amphitheater located in the center of Rome, Italy."
+},
+{
+    question: "Which river is the longest in the world?",
+    options: ["Amazon", "Nile", "Yangtze", "Mississippi"],
+    correct: 1,
+    fact: "The Nile River is traditionally considered the world's longest river, stretching over 4,100 miles."
+},
+{
+    question: "What is the capital city of Canada?",
+    options: ["Toronto", "Ottawa", "Vancouver", "Montreal"],
+    correct: 1,
+    fact: "Ottawa is Canada's capital, located in the province of Ontario."
+},
+{
+    question: "Which famous road stretches from Chicago to Santa Monica?",
+    options: ["Route 66", "Pacific Coast Highway", "Interstate 80", "Blue Ridge Parkway"],
+    correct: 0,
+    fact: "Route 66, often called the 'Main Street of America,' spans over 2,400 miles."
+},
+{
+    question: "Which city is known as the 'Pearl of the Danube'?",
+    options: ["Vienna", "Budapest", "Prague", "Bratislava"],
+    correct: 1,
+    fact: "Budapest is often called the 'Pearl of the Danube' for its stunning architecture and river views."
+},
+{
+    question: "Which U.S. city is famous for the Golden Gate Bridge?",
+    options: ["Los Angeles", "Seattle", "San Francisco", "San Diego"],
+    correct: 2,
+    fact: "San Francisco’s Golden Gate Bridge is one of the most internationally recognized symbols of the United States."
+},
+{
+    question: "Which country is famous for inventing chocolate?",
+    options: ["Belgium", "Switzerland", "Mexico", "France"],
+    correct: 2,
+    fact: "Chocolate was first made by the ancient Mesoamericans in present-day Mexico."
+},
+{
+    question: "Which Asian country is made up of more than 7,000 islands?",
+    options: ["Indonesia", "Philippines", "Japan", "Malaysia"],
+    correct: 1,
+    fact: "The Philippines consists of around 7,641 islands."
+},
+{
+    question: "Which famous waterfall borders both the USA and Canada?",
+    options: ["Victoria Falls", "Niagara Falls", "Iguazu Falls", "Angel Falls"],
+    correct: 1,
+    fact: "Niagara Falls spans the border between Ontario, Canada, and New York, USA."
+},
+{
+    question: "What is the smallest continent?",
+    options: ["Europe", "Antarctica", "Australia", "South America"],
+    correct: 2,
+    fact: "Australia is the smallest continent by land area but the sixth-largest country."
+},
+{
+    question: "Which country is known for tulips and windmills?",
+    options: ["Germany", "Belgium", "Netherlands", "Austria"],
+    correct: 2,
+    fact: "The Netherlands is famous for its colorful tulip fields and iconic windmills."
+},
+{
+    question: "Which African country was formerly known as Abyssinia?",
+    options: ["Ethiopia", "Sudan", "Ghana", "Nigeria"],
+    correct: 0,
+    fact: "Ethiopia was historically known as Abyssinia."
+},
+{
+    question: "In which country would you find the ancient city of Petra?",
+    options: ["Egypt", "Jordan", "Israel", "Lebanon"],
+    correct: 1,
+    fact: "Petra, carved into rose-colored rock, is located in southern Jordan."
+},
+{
+    question: "Which U.S. national park is known for its geysers, especially Old Faithful?",
+    options: ["Yosemite", "Yellowstone", "Grand Canyon", "Zion"],
+    correct: 1,
+    fact: "Yellowstone National Park is home to over half the world’s geysers."
+},
+{
+    question: "Which country is associated with the traditional dance, Flamenco?",
+    options: ["Portugal", "Mexico", "Spain", "Argentina"],
+    correct: 2,
+    fact: "Flamenco originated in the Andalusian region of Spain."
+},
+{
+    question: "What is the world's largest island (not a continent)?",
+    options: ["Australia", "Greenland", "New Guinea", "Borneo"],
+    correct: 1,
+    fact: "Greenland is the world’s largest island that is not considered a continent."
+},
+{
+    question: "Which Asian city is home to the world's busiest airport by international passenger traffic?",
+    options: ["Tokyo", "Hong Kong", "Dubai", "Beijing"],
+    correct: 2,
+    fact: "Dubai International Airport is the busiest airport for international travelers."
+},
+{
+    question: "Which ancient wonder was located in Iraq?",
+    options: ["Statue of Zeus", "Hanging Gardens of Babylon", "Lighthouse of Alexandria", "Mausoleum at Halicarnassus"],
+    correct: 1,
+    fact: "The Hanging Gardens of Babylon were one of the Seven Wonders of the Ancient World."
+},
+{
+    question: "Which desert covers much of northern Africa?",
+    options: ["Gobi", "Sahara", "Mojave", "Kalahari"],
+    correct: 1,
+    fact: "The Sahara Desert is the largest hot desert in the world."
+},
+{
+    question: "Which Asian country has a flag with a red circle on a white background?",
+    options: ["China", "Japan", "South Korea", "Vietnam"],
+    correct: 1,
+    fact: "Japan’s flag, called the Nisshōki, symbolizes the sun."
+},
+{
+    question: "Which country is known as the 'Land Down Under'?",
+    options: ["South Africa", "Australia", "New Zealand", "Argentina"],
+    correct: 1,
+    fact: "Australia earned the nickname 'Land Down Under' because it is located entirely south of the equator."
+},
+{
+    question: "In which European country would you find the city of Dubrovnik?",
+    options: ["Italy", "Croatia", "Greece", "Spain"],
+    correct: 1,
+    fact: "Dubrovnik, Croatia is known as the 'Pearl of the Adriatic.'"
+},
+{
+    question: "Which island is the largest in the Mediterranean Sea?",
+    options: ["Sardinia", "Cyprus", "Sicily", "Crete"],
+    correct: 2,
+    fact: "Sicily is the largest island in the Mediterranean by area."
+},
+{
+    question: "Which country is famous for the ancient temple complex of Bagan?",
+    options: ["India", "Thailand", "Myanmar", "Nepal"],
+    correct: 2,
+    fact: "Bagan, located in Myanmar, is home to thousands of ancient temples and pagodas."
+},
+{
+    question: "Which Scandinavian country has fjords along its coast?",
+    options: ["Finland", "Sweden", "Norway", "Denmark"],
+    correct: 2,
+    fact: "Norway is known for its dramatic fjords carved by glaciers."
+},
+{
+    question: "Which African country has a coastline along both the Atlantic and Indian Oceans?",
+    options: ["Egypt", "South Africa", "Morocco", "Namibia"],
+    correct: 1,
+    fact: "South Africa borders both the Atlantic and Indian Oceans."
+},
+{
+    question: "What is the capital city of Thailand?",
+    options: ["Chiang Mai", "Phuket", "Bangkok", "Pattaya"],
+    correct: 2,
+    fact: "Bangkok is the capital and largest city of Thailand."
+},
+{
+    question: "Which U.S. state is home to the Grand Canyon?",
+    options: ["Utah", "Nevada", "New Mexico", "Arizona"],
+    correct: 3,
+    fact: "The Grand Canyon is located in northern Arizona."
+},
+{
+    question: "Which sea separates Europe and Africa?",
+    options: ["Red Sea", "Mediterranean Sea", "Baltic Sea", "Caribbean Sea"],
+    correct: 1,
+    fact: "The Mediterranean Sea separates southern Europe from northern Africa."
+},
+{
+    question: "Which country is famous for the Great Wall?",
+    options: ["Japan", "China", "India", "South Korea"],
+    correct: 1,
+    fact: "The Great Wall of China was built to protect against invasions and stretches over 13,000 miles."
+},
+{
+    question: "Which country has more lakes than the rest of the world combined?",
+    options: ["Russia", "Canada", "United States", "Norway"],
+    correct: 1,
+    fact: "Canada has more than 2 million lakes, covering about 9% of its land area."
+},
+{
+    question: "Which mountain is the highest outside of Asia?",
+    options: ["Denali", "Aconcagua", "Kilimanjaro", "Mount Elbrus"],
+    correct: 1,
+    fact: "Aconcagua in Argentina is the highest peak outside of Asia at 6,960.8 meters (22,837 ft)."
+},
+{
+    question: "The Danube River does NOT flow through which of these countries?",
+    options: ["Germany", "Austria", "Ukraine", "Poland"],
+    correct: 3,
+    fact: "The Danube flows through 10 countries but not Poland."
+},
+{
+    question: "Which city is home to the world's largest carnival celebration?",
+    options: ["New Orleans", "Venice", "Rio de Janeiro", "Nice"],
+    correct: 2,
+    fact: "Rio de Janeiro hosts the largest carnival in the world, attracting millions of visitors."
+},
+{
+    question: "Which country owns Easter Island?",
+    options: ["Peru", "Chile", "Ecuador", "Argentina"],
+    correct: 1,
+    fact: "Easter Island is a special territory of Chile, famous for its Moai statues."
+},
+{
+    question: "Which African nation was never colonized?",
+    options: ["Kenya", "Ethiopia", "Ghana", "South Africa"],
+    correct: 1,
+    fact: "Ethiopia successfully resisted colonization, defeating Italy at the Battle of Adwa in 1896."
+},
+{
+    question: "Which U.S. state has the most national parks?",
+    options: ["California", "Alaska", "Utah", "Colorado"],
+    correct: 0,
+    fact: "California has 9 national parks, more than any other state."
+},
+{
+    question: "Which European capital is divided by the River Liffey?",
+    options: ["Edinburgh", "Dublin", "Brussels", "Vienna"],
+    correct: 1,
+    fact: "Dublin, Ireland’s capital, is divided north and south by the River Liffey."
+},
+{
+    question: "What is the capital of New Zealand?",
+    options: ["Auckland", "Wellington", "Christchurch", "Dunedin"],
+    correct: 1,
+    fact: "Wellington is New Zealand’s capital, located at the southern tip of the North Island."
+},
+{
+    question: "Which Middle Eastern country is home to the city of Muscat?",
+    options: ["Oman", "Jordan", "Saudi Arabia", "United Arab Emirates"],
+    correct: 0,
+    fact: "Muscat is the capital and largest city of Oman."
+},
+{
+    question: "Which South American country has no coastline?",
+    options: ["Bolivia", "Colombia", "Ecuador", "Peru"],
+    correct: 0,
+    fact: "Bolivia is landlocked after losing its coastline to Chile in the 19th century."
+},
+{
+    question: "Which Asian country was formerly known as Siam?",
+    options: ["Cambodia", "Myanmar", "Thailand", "Vietnam"],
+    correct: 2,
+    fact: "Thailand was officially known as Siam until 1939."
+},
+{
+    question: "Which Caribbean island is divided between two countries?",
+    options: ["Barbados", "Hispaniola", "Saint Martin", "Trinidad"],
+    correct: 2,
+    fact: "Saint Martin is divided between French Saint-Martin and Dutch Sint Maarten."
+},
+{
+    question: "What is the largest island in Japan?",
+    options: ["Kyushu", "Honshu", "Hokkaido", "Shikoku"],
+    correct: 1,
+    fact: "Honshu is Japan’s largest and most populous island, home to Tokyo, Kyoto, and Osaka."
+},
+{
+    question: "Which river is the longest in Europe?",
+    options: ["Danube", "Rhine", "Volga", "Seine"],
+    correct: 2,
+    fact: "The Volga River in Russia is Europe's longest river, stretching about 3,530 km (2,194 mi)."
+},
+{
+    question: "Which U.S. state is closest to Russia?",
+    options: ["Alaska", "Hawaii", "Washington", "Oregon"],
+    correct: 0,
+    fact: "Alaska and Russia are only about 2.4 miles (3.8 km) apart at their closest point."
+},
+{
+    question: "Which country has a maple leaf on its flag?",
+    options: ["United States", "Canada", "Australia", "United Kingdom"],
+    correct: 1,
+    fact: "Canada’s national flag features a red maple leaf."
+},
+{
+    question: "Which ancient civilization built Machu Picchu?",
+    options: ["Aztecs", "Incas", "Mayans", "Olmecs"],
+    correct: 1,
+    fact: "Machu Picchu was built by the Inca Empire around the 15th century."
+},
+{
+    question: "Which European country is famous for its Blue Lagoon geothermal spa?",
+    options: ["Switzerland", "Iceland", "Norway", "Ireland"],
+    correct: 1,
+    fact: "Iceland’s Blue Lagoon is a popular geothermal spa located near Reykjavik."
+},
+{
+    question: "Which African river is the longest?",
+    options: ["Congo", "Nile", "Zambezi", "Niger"],
+    correct: 1,
+    fact: "The Nile River is the longest river in Africa, stretching about 6,650 km (4,130 miles)."
+},
+{
+    question: "Which desert is the hottest in the world?",
+    options: ["Sahara", "Gobi", "Atacama", "Lut"],
+    correct: 3,
+    fact: "Iran's Lut Desert holds the record for the highest ground temperatures ever recorded."
+},
+{
+    question: "Which city is known as the 'Pearl of the Adriatic'?",
+    options: ["Dubrovnik", "Venice", "Split", "Zadar"],
+    correct: 0,
+    fact: "Dubrovnik, Croatia, earned this nickname for its stunning Old Town and seaside location."
+},
+{
+    question: "Which Asian country has the most UNESCO World Heritage Sites?",
+    options: ["China", "India", "Japan", "Thailand"],
+    correct: 0,
+    fact: "China ties with Italy for the most UNESCO World Heritage Sites."
+},
+{
+    question: "Which country is home to the Great Blue Hole?",
+    options: ["Belize", "Bahamas", "Mexico", "Cuba"],
+    correct: 0,
+    fact: "The Great Blue Hole, a giant marine sinkhole, is located off the coast of Belize."
+},
+{
+    question: "The Matterhorn is located on the border of Switzerland and which other country?",
+    options: ["Austria", "Italy", "France", "Germany"],
+    correct: 1,
+    fact: "The Matterhorn straddles the border between Switzerland and Italy."
+},
+{
+    question: "Which African country is famous for its ancient rock-hewn churches in Lalibela?",
+    options: ["Ethiopia", "Egypt", "Sudan", "Morocco"],
+    correct: 0,
+    fact: "Lalibela in Ethiopia is known for its 12th-century churches carved from solid rock."
+},
+{
+    question: "In which country can you visit the historic city of Petra?",
+    options: ["Jordan", "Egypt", "Syria", "Lebanon"],
+    correct: 0,
+    fact: "Petra, known as the 'Rose City,' is Jordan’s most famous archaeological site."
+},
+{
+    question: "Which Australian city is famous for its Opera House and Harbour Bridge?",
+    options: ["Melbourne", "Sydney", "Brisbane", "Perth"],
+    correct: 1,
+    fact: "Sydney’s Opera House and Harbour Bridge are two of Australia’s most iconic landmarks."
+},
+{
+    question: "Which European country’s capital is known as 'The Eternal City'?",
+    options: ["Greece", "Italy", "Spain", "France"],
+    correct: 1,
+    fact: "Rome, Italy, is often called 'The Eternal City' due to its long and influential history."
+},
+{
+    question: "Which Southeast Asian country is known for the temples of Bagan?",
+    options: ["Laos", "Thailand", "Myanmar", "Vietnam"],
+    correct: 2,
+    fact: "Bagan in Myanmar is home to over 2,000 ancient Buddhist temples and pagodas."
+}
         ];
 
         // Game state
