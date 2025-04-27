@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Charlene Becker">
+    <title>Travel Advisor Weekly Reflection</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: transparent;
+        }
+
+        .widget-container {
+            width: 100%;
+            max-width: 320px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.20);
+            color: #373737;
+            position: relative;
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .widget-title {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .date-display {
+            font-size: 0.7rem;
+            font-weight: 500;
+            opacity: 0.6;
+            position: absolute;
+            top: 18px;
+            right: 45px;
+        }
+
+        .reflection-container {
+            margin: 12px 0;
+        }
+
+        .reflection-question {
+            margin-bottom: 16px;
+        }
+
+        .question-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .question-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            background: #FFFFFF;
+            font-size: 0.75rem;
+            color: #373737;
+            min-height: 60px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .actions-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .action-button {
+            background: #F5F5F5;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #373737;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-grow: 1;
+            margin: 0 4px;
+        }
+
+        .action-button:first-child {
+            margin-left: 0;
+        }
+
+        .action-button:last-child {
+            margin-right: 0;
+        }
+
+        .action-button:hover {
+            background: #E7E7E7;
+        }
+
+        .save-button {
+            background: #E7F0FF;
+            color: #3E7BFA;
+        }
+
+        .save-button:hover {
+            background: #D6E5FF;
+        }
+
+        .settings-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .settings-icon:hover {
+            opacity: 1;
+        }
+
+        .settings-panel {
+            position: absolute;
+            top: 36px;
+            right: 12px;
+            background: #FFFFFF;
+            border-radius: 6px;
+            padding: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            display: none;
+            z-index: 10;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        .settings-option {
+            font-size: 0.7rem;
+            padding: 5px 8px;
+            cursor: pointer;
+            color: #555;
+            border-radius: 5px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .settings-option:hover {
+            background-color: #EBEBEB;
+        }
+
+        .footer {
+            font-size: 0.47rem;
+            text-align: center;
+            opacity: 0.65;
+            margin-top: 16px;
+        }
+
+        .week-indicator {
+            font-size: 0.65rem;
+            opacity: 0.75;
+            margin-top: -10px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 20px 0;
+            color: #999;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 400px) {
+            .widget-container {
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <div class="settings-icon" id="settingsIcon">⚙️</div>
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-option" id="exportOption">Export reflection</div>
+            <div class="settings-option" id="clearAllOption">Clear all answers</div>
+            <div class="settings-option" id="viewHistoryOption">View past reflections</div>
+        </div>
+        
+        <div class="widget-header">
+            <div class="widget-title">End-of-Week Reflection</div>
+            <div class="date-display" id="dateDisplay"></div>
+        </div>
+        
+        <div class="week-indicator" id="weekIndicator"></div>
+        
+        <div class="reflection-container" id="reflectionContainer">
+            <div class="reflection-question">
+                <label class="question-label" for="question1">What client situations went particularly well this week?</label>
+                <textarea class="question-textarea" id="question1" placeholder="Reflect on your wins and successes..."></textarea>
+            </div>
+            
+            <div class="reflection-question">
+                <label class="question-label" for="question2">What are your top 3 priorities for next week?</label>
+                <textarea class="question-textarea" id="question2" placeholder="List your most important tasks..."></textarea>
+            </div>
+            
+            <div class="reflection-question">
+                <label class="question-label" for="question3">What could you streamline or delegate next week?</label>
+                <textarea class="question-textarea" id="question3" placeholder="Identify opportunities for efficiency..."></textarea>
+            </div>
+        </div>
+        
+        <div class="actions-container">
+            <button class="action-button" id="resetButton">Reset</button>
+            <button class="action-button save-button" id="saveButton">Save Reflection</button>
+        </div>
+        
+        <div class="footer">powered by Charlene Becker</div>
+    </div>
+
+    <script>
+        // Data structure for reflections
+        let currentReflection = {
+            date: new Date(),
+            weekNumber: 0,
+            answers: ["", "", ""]
+        };
+        
+        // DOM Elements
+        const dateDisplay = document.getElementById('dateDisplay');
+        const weekIndicator = document.getElementById('weekIndicator');
+        const reflectionContainer = document.getElementById('reflectionContainer');
+        const question1 = document.getElementById('question1');
+        const question2 = document.getElementById('question2');
+        const question3 = document.getElementById('question3');
+        const resetButton = document.getElementById('resetButton');
+        const saveButton = document.getElementById('saveButton');
+        const settingsIcon = document.getElementById('settingsIcon');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const exportOption = document.getElementById('exportOption');
+        const clearAllOption = document.getElementById('clearAllOption');
+        const viewHistoryOption = document.getElementById('viewHistoryOption');
+        
+        // Initialize
+        function init() {
+            // Set current date and week number
+            updateDateDisplay();
+            
+            // Load saved reflection if exists for current week
+            loadCurrentReflection();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+        
+        // Get the week number
+        function getWeekNumber(date) {
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        }
+        
+        // Update date display
+        function updateDateDisplay() {
+            const today = new Date();
+            const options = { weekday: 'long', month: 'short', day: 'numeric' };
+            dateDisplay.textContent = today.toLocaleDateString('en-US', options);
+            
+            // Update week number
+            const weekNum = getWeekNumber(today);
+            currentReflection.weekNumber = weekNum;
+            weekIndicator.textContent = `Week ${weekNum} of ${today.getFullYear()}`;
+        }
+        
+        // Load current reflection from localStorage
+        function loadCurrentReflection() {
+            const savedReflections = JSON.parse(localStorage.getItem('weeklyReflections') || '[]');
+            
+            // Find reflection for current week
+            const currentWeekReflection = savedReflections.find(r => 
+                r.weekNumber === currentReflection.weekNumber && 
+                new Date(r.date).getFullYear() === currentReflection.date.getFullYear()
+            );
+            
+            if (currentWeekReflection) {
+                currentReflection = {
+                    ...currentWeekReflection,
+                    date: new Date(currentWeekReflection.date)
+                };
+                
+                // Fill in form fields
+                question1.value = currentReflection.answers[0] || '';
+                question2.value = currentReflection.answers[1] || '';
+                question3.value = currentReflection.answers[2] || '';
+            }
+        }
+        
+        // Save current reflection
+        function saveReflection() {
+            // Get all answers
+            currentReflection.answers = [
+                question1.value,
+                question2.value,
+                question3.value
+            ];
+            
+            // Refresh current date
+            currentReflection.date = new Date();
+            
+            // Get existing reflections
+            const savedReflections = JSON.parse(localStorage.getItem('weeklyReflections') || '[]');
+            
+            // Find if we already have a reflection for this week
+            const existingIndex = savedReflections.findIndex(r => 
+                r.weekNumber === currentReflection.weekNumber && 
+                new Date(r.date).getFullYear() === currentReflection.date.getFullYear()
+            );
+            
+            if (existingIndex >= 0) {
+                // Update existing reflection
+                savedReflections[existingIndex] = currentReflection;
+            } else {
+                // Add new reflection
+                savedReflections.push(currentReflection);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('weeklyReflections', JSON.stringify(savedReflections));
+            
+            // Show success message
+            alert('Your weekly reflection has been saved!');
+        }
+        
+        // Reset current reflection
+        function resetReflection() {
+            if (confirm('Reset all answers for this week?')) {
+                question1.value = '';
+                question2.value = '';
+                question3.value = '';
+                currentReflection.answers = ["", "", ""];
+            }
+        }
+        
+        // Export reflection to clipboard
+        function exportReflection() {
+            const formattedDate = currentReflection.date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            
+            const exportText = `# Weekly Reflection - Week ${currentReflection.weekNumber}, ${currentReflection.date.getFullYear()}\n` +
+                `Date: ${formattedDate}\n\n` +
+                `## What client situations went particularly well this week?\n${question1.value || '(No answer provided)'}\n\n` +
+                `## What are your top 3 priorities for next week?\n${question2.value || '(No answer provided)'}\n\n` +
+                `## What could you streamline or delegate next week?\n${question3.value || '(No answer provided)'}`;
+            
+            // Create a temporary textarea to copy text to clipboard
+            const textarea = document.createElement('textarea');
+            textarea.value = exportText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            alert('Reflection copied to clipboard!');
+            settingsPanel.classList.remove('active');
+        }
+        
+        // View reflection history
+        function viewReflectionHistory() {
+            const savedReflections = JSON.parse(localStorage.getItem('weeklyReflections') || '[]');
+            
+            if (savedReflections.length === 0) {
+                alert('No reflection history found.');
+                return;
+            }
+            
+            // Sort reflections by date (newest first)
+            const sortedReflections = savedReflections.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            let historyText = '# Reflection History\n\n';
+            
+            sortedReflections.forEach(reflection => {
+                const reflectionDate = new Date(reflection.date);
+                historyText += `## Week ${reflection.weekNumber}, ${reflectionDate.getFullYear()} (${reflectionDate.toLocaleDateString()})\n\n`;
+                
+                // Question 1
+                historyText += `### What client situations went particularly well?\n${reflection.answers[0] || '(No answer provided)'}\n\n`;
+                
+                // Question 2
+                historyText += `### Top 3 priorities\n${reflection.answers[1] || '(No answer provided)'}\n\n`;
+                
+                // Question 3
+                historyText += `### Streamline or delegate\n${reflection.answers[2] || '(No answer provided)'}\n\n`;
+                
+                historyText += '---\n\n';
+            });
+            
+            // Create a temporary textarea to copy text to clipboard
+            const textarea = document.createElement('textarea');
+            textarea.value = historyText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            alert('Reflection history copied to clipboard!');
+            settingsPanel.classList.remove('active');
+        }
+        
+        // Clear all saved reflections
+        function clearAllReflections() {
+            if (confirm('Are you sure you want to clear all saved reflections? This cannot be undone.')) {
+                localStorage.removeItem('weeklyReflections');
+                question1.value = '';
+                question2.value = '';
+                question3.value = '';
+                currentReflection.answers = ["", "", ""];
+                alert('All reflections have been cleared.');
+                settingsPanel.classList.remove('active');
+            }
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Save button
+            saveButton.addEventListener('click', saveReflection);
+            
+            // Reset button
+            resetButton.addEventListener('click', resetReflection);
+            
+            // Settings icon
+            settingsIcon.addEventListener('click', () => {
+                settingsPanel.classList.toggle('active');
+            });
+            
+            // Export option
+            exportOption.addEventListener('click', exportReflection);
+            
+            // Clear all option
+            clearAllOption.addEventListener('click', clearAllReflections);
+            
+            // View history option
+            viewHistoryOption.addEventListener('click', viewReflectionHistory);
+            
+            // Close settings panel when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!settingsIcon.contains(e.target) && !settingsPanel.contains(e.target)) {
+                    settingsPanel.classList.remove('active');
+                }
+            });
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
