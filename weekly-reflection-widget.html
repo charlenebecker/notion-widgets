@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Charlene Becker">
-    <title>Travel Advisor Weekly Reflection</title>
+    <title>Weekly Reflection</title>
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -142,6 +142,7 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
             display: none;
             z-index: 10;
+            max-width: 200px;
         }
 
         .settings-panel.active {
@@ -181,6 +182,144 @@
             padding: 20px 0;
             color: #999;
             font-size: 0.75rem;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-text {
+            font-size: 0.75rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            font-family: monospace;
+            background: #f8f8f8;
+            padding: 12px;
+            border-radius: 4px;
+            color: #333;
+        }
+
+        .modal-copy-button {
+            background: #E7F0FF;
+            color: #3E7BFA;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 15px;
+        }
+
+        .modal-copy-button:hover {
+            background: #D6E5FF;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #373737;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .notification.show {
+            opacity: 1;
+        }
+
+        /* Custom confirm dialog */
+        .confirm-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .confirm-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .confirm-buttons button {
+            background: #F5F5F5;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .confirm-buttons #confirmYes {
+            background: #E7F0FF;
+            color: #3E7BFA;
         }
 
         @media (max-width: 400px) {
@@ -231,6 +370,32 @@
         <div class="footer">powered by Charlene Becker</div>
     </div>
 
+    <!-- Modal for displaying text content -->
+    <div class="modal" id="textModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div class="modal-title" id="modalTitle">Weekly Reflection</div>
+            <div class="modal-text" id="modalText"></div>
+            <button class="modal-copy-button" id="modalCopyButton">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <!-- Custom confirm dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <div class="confirm-content">
+            <p id="confirmMessage"></p>
+            <div class="confirm-buttons">
+                <button id="confirmNo">Cancel</button>
+                <button id="confirmYes">Yes</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Data structure for reflections
         let currentReflection = {
@@ -254,6 +419,32 @@
         const clearAllOption = document.getElementById('clearAllOption');
         const viewHistoryOption = document.getElementById('viewHistoryOption');
         
+        // Modal elements
+        const textModal = document.getElementById('textModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalText = document.getElementById('modalText');
+        const modalCopyButton = document.getElementById('modalCopyButton');
+        
+        // Notification elements
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+        
+        // Confirm dialog elements
+        const confirmDialog = document.getElementById('confirmDialog');
+        const confirmMessage = document.getElementById('confirmMessage');
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+        
+        // Helper to check if running in iframe (like Notion)
+        function isInIframe() {
+            try {
+                return window.self !== window.top;
+            } catch (e) {
+                return true; // If accessing parent window fails, we're in an iframe
+            }
+        }
+        
         // Initialize
         function init() {
             // Set current date and week number
@@ -264,6 +455,11 @@
             
             // Set up event listeners
             setupEventListeners();
+            
+            // Log if we're in an iframe
+            if (isInIframe()) {
+                console.log('Running in iframe (likely Notion)');
+            }
         }
         
         // Get the week number
@@ -285,9 +481,31 @@
             weekIndicator.textContent = `Week ${weekNum} of ${today.getFullYear()}`;
         }
         
+        // Storage helper with fallback
+        const storage = {
+            get: function(key, defaultValue = null) {
+                try {
+                    const value = localStorage.getItem(key);
+                    return value ? JSON.parse(value) : defaultValue;
+                } catch (err) {
+                    console.error('Storage get error:', err);
+                    return defaultValue;
+                }
+            },
+            set: function(key, value) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                    return true;
+                } catch (err) {
+                    console.error('Storage set error:', err);
+                    return false;
+                }
+            }
+        };
+        
         // Load current reflection from localStorage
         function loadCurrentReflection() {
-            const savedReflections = JSON.parse(localStorage.getItem('weeklyReflections') || '[]');
+            const savedReflections = storage.get('weeklyReflections', []);
             
             // Find reflection for current week
             const currentWeekReflection = savedReflections.find(r => 
@@ -321,7 +539,7 @@
             currentReflection.date = new Date();
             
             // Get existing reflections
-            const savedReflections = JSON.parse(localStorage.getItem('weeklyReflections') || '[]');
+            const savedReflections = storage.get('weeklyReflections', []);
             
             // Find if we already have a reflection for this week
             const existingIndex = savedReflections.findIndex(r => 
@@ -338,24 +556,55 @@
             }
             
             // Save to localStorage
-            localStorage.setItem('weeklyReflections', JSON.stringify(savedReflections));
+            const success = storage.set('weeklyReflections', savedReflections);
             
             // Show success message
-            alert('Your weekly reflection has been saved!');
+            if (success) {
+                showNotification('Your weekly reflection has been saved!');
+            } else {
+                showNotification('Could not save reflection. Storage may be unavailable.');
+            }
         }
         
         // Reset current reflection
-        function resetReflection() {
-            if (confirm('Reset all answers for this week?')) {
+        async function resetReflection() {
+            const confirmed = await customConfirm('Reset all answers for this week?');
+            if (confirmed) {
                 question1.value = '';
                 question2.value = '';
                 question3.value = '';
                 currentReflection.answers = ["", "", ""];
+                showNotification('Answers have been reset');
             }
         }
         
-        // Export reflection to clipboard
-        function exportReflection() {
+        // Modern clipboard API with fallback
+        async function copyToClipboard(text) {
+            try {
+                // Try modern Clipboard API first
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } else {
+                    // Fall back to the older method
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    textarea.style.position = 'fixed'; // Prevent scrolling to bottom
+                    textarea.style.opacity = '0';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    const success = document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    return success;
+                }
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                return false;
+            }
+        }
+        
+        // Format reflection for export
+        function formatReflectionForExport() {
             const formattedDate = currentReflection.date.toLocaleDateString('en-US', {
                 weekday: 'long',
                 month: 'long',
@@ -363,44 +612,33 @@
                 year: 'numeric'
             });
             
-            const exportText = `# Weekly Reflection - Week ${currentReflection.weekNumber}, ${currentReflection.date.getFullYear()}\n` +
+            return `# Weekly Reflection - Week ${currentReflection.weekNumber}, ${currentReflection.date.getFullYear()}\n` +
                 `Date: ${formattedDate}\n\n` +
-                `## What client situations went particularly well this week?\n${question1.value || '(No answer provided)'}\n\n` +
-                `## What are your top 3 priorities for next week?\n${question2.value || '(No answer provided)'}\n\n` +
-                `## What could you streamline or delegate next week?\n${question3.value || '(No answer provided)'}`;
+                `## What went well this week/what progress did I make toward my goals?\n${question1.value || '(No answer provided)'}\n\n` +
+                `## What are my top 3 priorities for next week?\n${question2.value || '(No answer provided)'}\n\n` +
+                `## What challenges or bottlenecks slowed me down/what can I streamline or delegate next week?\n${question3.value || '(No answer provided)'}`;
+        }
+        
+        // Export reflection
+        function exportReflection() {
+            const exportText = formatReflectionForExport();
             
-            // Create a temporary textarea to copy text to clipboard
-            const textarea = document.createElement('textarea');
-            textarea.value = exportText;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
+            // Show in modal for manual copying - more reliable in embedded contexts
+            showTextModal('Weekly Reflection Export', exportText);
             
-            alert('Reflection copied to clipboard!');
             settingsPanel.classList.remove('active');
         }
         
-        // View reflection history
-        function viewReflectionHistory() {
-            const savedReflections = JSON.parse(localStorage.getItem('weeklyReflections') || '[]');
-            
-            if (savedReflections.length === 0) {
-                alert('No reflection history found.');
-                return;
-            }
-            
-            // Sort reflections by date (newest first)
-            const sortedReflections = savedReflections.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
+        // Format history for export
+        function formatHistoryForExport(reflections) {
             let historyText = '# Reflection History\n\n';
             
-            sortedReflections.forEach(reflection => {
+            reflections.forEach(reflection => {
                 const reflectionDate = new Date(reflection.date);
                 historyText += `## Week ${reflection.weekNumber}, ${reflectionDate.getFullYear()} (${reflectionDate.toLocaleDateString()})\n\n`;
                 
                 // Question 1
-                historyText += `### What client situations went particularly well?\n${reflection.answers[0] || '(No answer provided)'}\n\n`;
+                historyText += `### What went well?\n${reflection.answers[0] || '(No answer provided)'}\n\n`;
                 
                 // Question 2
                 historyText += `### Top 3 priorities\n${reflection.answers[1] || '(No answer provided)'}\n\n`;
@@ -411,27 +649,82 @@
                 historyText += '---\n\n';
             });
             
-            // Create a temporary textarea to copy text to clipboard
-            const textarea = document.createElement('textarea');
-            textarea.value = historyText;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
+            return historyText;
+        }
+        
+        // View reflection history
+        function viewReflectionHistory() {
+            const savedReflections = storage.get('weeklyReflections', []);
             
-            alert('Reflection history copied to clipboard!');
+            if (savedReflections.length === 0) {
+                showNotification('No reflection history found.');
+                return;
+            }
+            
+            // Sort reflections by date (newest first)
+            const sortedReflections = savedReflections.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            const historyText = formatHistoryForExport(sortedReflections);
+            
+            // Show in modal for manual copying
+            showTextModal('Reflection History', historyText);
+            
             settingsPanel.classList.remove('active');
         }
         
+        // Show text in modal
+        function showTextModal(title, text) {
+            modalTitle.textContent = title;
+            modalText.textContent = text;
+            textModal.classList.add('active');
+        }
+        
+        // Show notification
+        function showNotification(message, duration = 3000) {
+            notificationMessage.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+        
+        // Custom confirm dialog
+        function customConfirm(message) {
+            return new Promise((resolve) => {
+                confirmMessage.textContent = message;
+                confirmDialog.style.display = 'flex';
+                
+                const handleYes = () => {
+                    confirmDialog.style.display = 'none';
+                    confirmYes.removeEventListener('click', handleYes);
+                    confirmNo.removeEventListener('click', handleNo);
+                    resolve(true);
+                };
+                
+                const handleNo = () => {
+                    confirmDialog.style.display = 'none';
+                    confirmYes.removeEventListener('click', handleYes);
+                    confirmNo.removeEventListener('click', handleNo);
+                    resolve(false);
+                };
+                
+                confirmYes.addEventListener('click', handleYes);
+                confirmNo.addEventListener('click', handleNo);
+            });
+        }
+        
         // Clear all saved reflections
-        function clearAllReflections() {
-            if (confirm('Are you sure you want to clear all saved reflections? This cannot be undone.')) {
+        async function clearAllReflections() {
+            const confirmed = await customConfirm('Are you sure you want to clear all saved reflections? This cannot be undone.');
+            
+            if (confirmed) {
                 localStorage.removeItem('weeklyReflections');
                 question1.value = '';
                 question2.value = '';
                 question3.value = '';
                 currentReflection.answers = ["", "", ""];
-                alert('All reflections have been cleared.');
+                showNotification('All reflections have been cleared.');
                 settingsPanel.classList.remove('active');
             }
         }
@@ -457,6 +750,28 @@
             
             // View history option
             viewHistoryOption.addEventListener('click', viewReflectionHistory);
+            
+            // Modal close button
+            modalClose.addEventListener('click', () => {
+                textModal.classList.remove('active');
+            });
+            
+            // Modal copy button
+            modalCopyButton.addEventListener('click', async () => {
+                const success = await copyToClipboard(modalText.textContent);
+                if (success) {
+                    showNotification('Copied to clipboard!');
+                } else {
+                    showNotification('Failed to copy. Please select text and copy manually.');
+                }
+            });
+            
+            // Close modal when clicking outside
+            textModal.addEventListener('click', (e) => {
+                if (e.target === textModal) {
+                    textModal.classList.remove('active');
+                }
+            });
             
             // Close settings panel when clicking outside
             document.addEventListener('click', (e) => {
