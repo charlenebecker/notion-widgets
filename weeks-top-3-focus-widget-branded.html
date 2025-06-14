@@ -291,12 +291,11 @@
             const today = new Date();
             const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
             
-            // Calculate start of week (Monday)
+            // Calculate start of week (Sunday)
             const startOfWeek = new Date(today);
-            const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1; // If Sunday, go back 6 days, else go back (currentDay - 1) days
-            startOfWeek.setDate(today.getDate() - daysFromMonday);
+            startOfWeek.setDate(today.getDate() - currentDay);
             
-            // Calculate end of week (Sunday)
+            // Calculate end of week (Saturday)
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
             
