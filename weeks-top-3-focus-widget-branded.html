@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Charlene Becker">
-    <title>Today's Top 3 Focus Widget</title>
+    <title>Week's Top 3 Focus Widget</title>
     <style>
         body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -225,7 +225,7 @@
         </div>
         
         <div class="widget-header">
-            <div class="widget-title">Today's Top 3</div>
+            <div class="widget-title">Week's Top 3</div>
             <div class="date-display" id="dateDisplay"></div>
         </div>
         
@@ -273,7 +273,7 @@
         
         // Initialize
         function init() {
-            // Set current date
+            // Set current week range
             updateDateDisplay();
             
             // Load saved tasks from localStorage
@@ -286,11 +286,26 @@
             setupEventListeners();
         }
         
-        // Update date display
+        // Update date display to show week range
         function updateDateDisplay() {
-            const options = { weekday: 'long', month: 'short', day: 'numeric' };
             const today = new Date();
-            dateDisplay.textContent = today.toLocaleDateString('en-US', options);
+            const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            
+            // Calculate start of week (Monday)
+            const startOfWeek = new Date(today);
+            const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1; // If Sunday, go back 6 days, else go back (currentDay - 1) days
+            startOfWeek.setDate(today.getDate() - daysFromMonday);
+            
+            // Calculate end of week (Sunday)
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            // Format dates
+            const options = { month: 'short', day: 'numeric' };
+            const startStr = startOfWeek.toLocaleDateString('en-US', options);
+            const endStr = endOfWeek.toLocaleDateString('en-US', options);
+            
+            dateDisplay.textContent = `${startStr} - ${endStr}`;
         }
         
         // Load tasks from localStorage
@@ -410,7 +425,7 @@
                     .map(task => `${task.priority}. ${task.text} ${task.completed ? '(✓)' : ''}`)
                     .join('\n');
                 
-                const exportText = `Today's Top 3 Tasks (${dateDisplay.textContent}):\n${taskText}`;
+                const exportText = `Week's Top 3 Tasks (${dateDisplay.textContent}):\n${taskText}`;
                 
                 // Create a temporary textarea to copy text to clipboard
                 const textarea = document.createElement('textarea');
