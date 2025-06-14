@@ -4,199 +4,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Charlene Becker">
-    <title>Today's Top 3 Focus Widget</title>
+    <title>Week's Top 3 Focus Widget</title>
     <style>
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: transparent;
-        }
-        .widget-container {
-            width: 100%;
-            max-width: 320px;
-            background: linear-gradient(135deg, #373737, #4A4A4A);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            color: #FFFFFF;
-            position: relative;
-        }
-        .widget-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .widget-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-        .date-display {
-            font-size: 0.85rem;
-            font-weight: 500;
-            opacity: 0.9;
-        }
-        .tasks-container {
-            margin: 16px 0;
-        }
-        .task-item {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            position: relative;
-            transition: all 0.2s ease;
-        }
-        .task-item.completed {
-            background-color: rgba(255, 255, 255, 0.05);
-            opacity: 0.7;
-        }
-        .task-item.completed .task-text {
-            text-decoration: line-through;
-        }
-        .task-checkbox {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 2px solid #ECE3DA;
-            display: inline-block;
-            margin-right: 12px;
-            vertical-align: middle;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .task-item.completed .task-checkbox {
-            background-color: #ECE3DA;
-            position: relative;
-        }
-        .task-item.completed .task-checkbox::after {
-            content: "✓";
-            position: absolute;
-            color: #373737;
-            font-size: 12px;
-            top: -2px;
-            left: 3px;
-        }
-        .task-text {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 0.95rem;
-            width: calc(100% - 40px);
-            word-break: break-word;
-        }
-        .task-priority {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background-color: #ECE3DA;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #373737;
-        }
-        .empty-task {
-            color: rgba(236, 227, 218, 0.7);
-            font-style: italic;
-        }
-        .edit-button {
-            background-color: #ECE3DA;
-            color: #373737;
-            border: none;
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .edit-button:hover {
-            background-color: #FFFFFF;
-        }
-        .edit-mode {
-            display: none;
-        }
-        .edit-mode.active {
-            display: block;
-        }
-        .view-mode.hidden {
-            display: none;
-        }
-        .task-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-            background-color: #FFFFFF;
-            color: #373737;
-        }
-        .save-button {
-            background-color: #ECE3DA;
-            color: #373737;
-            border: none;
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 10px;
-        }
-        .save-button:hover {
-            background-color: #FFFFFF;
-        }
-        .settings-icon {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            opacity: 0.8;
-            transition: all 0.2s ease;
-        }
-        .settings-icon:hover {
-            opacity: 1;
-        }
-        .settings-panel {
-            position: absolute;
-            top: 40px;
-            right: 12px;
-            background-color: #FFFFFF;
-            border-radius: 8px;
-            padding: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            display: none;
-            z-index: 10;
-        }
-        .settings-panel.active {
-            display: block;
-        }
-        .settings-option {
-            color: #373737;
-            padding: 8px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .settings-option:hover {
-            background-color: #ECE3DA;
-        }
-        .footer {
-            font-size: 0.6rem;
-            opacity: 0.7;
-            text-align: center;
-            margin-top: 16px;
-            color: #ECE3DA;
-        }
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: transparent;
+}
+
+.widget-container {
+    width: 100%;
+    max-width: 240px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.20);
+    color: #373737;
+    position: relative;
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.widget-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.date-display {
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.6;
+    position: absolute;
+    top: 14px;
+    right: 45px;
+}
+
+.tasks-container {
+    margin: 12px 0;
+}
+
+.task-item {
+    padding: 6px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.task-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    transform: translateY(-1px);
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    opacity: 0.4;
+}
+
+.task-checkbox {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 2px solid #D3D3D3;
+    margin-right: 8px;
+    cursor: pointer;
+    position: relative;
+    background: white;
+    transition: background 0.2s;
+}
+
+.task-checkbox:hover {
+    background: #EBEBEB;
+}
+
+.task-item.completed .task-checkbox {
+    background-color: #D3D3D3;
+}
+
+.task-item.completed .task-checkbox::after {
+    content: "✓";
+    position: absolute;
+    font-size: 9px;
+    color: #373737;
+    top: 0;
+    left: 3px;
+}
+
+.task-text {
+    flex-grow: 1;
+    font-size: 0.75rem;
+    letter-spacing: 0.1px;
+}
+
+.task-priority {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #E7E7E7;
+    color: #555;
+    width: 18px;
+    height: 18px;
+    font-size: 0.6rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.edit-button, .save-button {
+    background: #F5F5F5;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: #373737;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.edit-button:hover, .save-button:hover {
+    background: #E7E7E7;
+}
+
+.edit-mode {
+    display: none;
+}
+
+.edit-mode.active {
+    display: block;
+}
+
+.view-mode.hidden {
+    display: none;
+}
+
+.task-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    background: #FFFFFF;
+    font-size: 0.75rem;
+    color: #373737;
+}
+
+.settings-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.settings-icon:hover {
+    opacity: 1;
+}
+
+.settings-panel {
+    position: absolute;
+    top: 30px;
+    right: 8px;
+    background: #FFFFFF;
+    border-radius: 6px;
+    padding: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: none;
+    z-index: 10;
+}
+
+.settings-panel.active {
+    display: block;
+}
+
+.settings-option {
+    font-size: 0.7rem;
+    padding: 5px 8px;
+    cursor: pointer;
+    color: #555;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+
+.settings-option:hover {
+    background-color: #EBEBEB;
+}
+
+.footer {
+    font-size: 0.47rem;
+    text-align: center;
+    opacity: 0.65;
+    margin-top: 12px;
+}
     </style>
 </head>
 <body>
@@ -208,7 +225,7 @@
         </div>
         
         <div class="widget-header">
-            <div class="widget-title">Today's Top 3</div>
+            <div class="widget-title">Week's Top 3</div>
             <div class="date-display" id="dateDisplay"></div>
         </div>
         
@@ -256,7 +273,7 @@
         
         // Initialize
         function init() {
-            // Set current date
+            // Set current week range
             updateDateDisplay();
             
             // Load saved tasks from localStorage
@@ -269,11 +286,26 @@
             setupEventListeners();
         }
         
-        // Update date display
+        // Update date display to show week range
         function updateDateDisplay() {
-            const options = { weekday: 'long', month: 'short', day: 'numeric' };
             const today = new Date();
-            dateDisplay.textContent = today.toLocaleDateString('en-US', options);
+            const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            
+            // Calculate start of week (Monday)
+            const startOfWeek = new Date(today);
+            const daysFromMonday = currentDay === 0 ? 6 : currentDay - 1; // If Sunday, go back 6 days, else go back (currentDay - 1) days
+            startOfWeek.setDate(today.getDate() - daysFromMonday);
+            
+            // Calculate end of week (Sunday)
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            // Format dates
+            const options = { month: 'short', day: 'numeric' };
+            const startStr = startOfWeek.toLocaleDateString('en-US', options);
+            const endStr = endOfWeek.toLocaleDateString('en-US', options);
+            
+            dateDisplay.textContent = `${startStr} - ${endStr}`;
         }
         
         // Load tasks from localStorage
@@ -393,7 +425,7 @@
                     .map(task => `${task.priority}. ${task.text} ${task.completed ? '(✓)' : ''}`)
                     .join('\n');
                 
-                const exportText = `Today's Top 3 Tasks (${dateDisplay.textContent}):\n${taskText}`;
+                const exportText = `Week's Top 3 Tasks (${dateDisplay.textContent}):\n${taskText}`;
                 
                 // Create a temporary textarea to copy text to clipboard
                 const textarea = document.createElement('textarea');
